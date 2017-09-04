@@ -3,7 +3,7 @@
 body{
     background-color: #725a34;
     font-family: 'Press Start 2P', cursive;
-    
+    color:white
 }
 
 .title{
@@ -11,16 +11,36 @@ body{
 	color:white;
 	border-radius: 15px;
 }
-
-
+.btn{
+    background-color:#725a34;
+    border:1px solid white;
+    color:white;
+    border-radius:15px;
+}
+.btn:hover{
+    background-color:white;
+    color:#725a34;
+}
 .buttons-screen{
 	margin-top: 200px;
- .btn{
-	background-color:#725a34;
-	border:1px solid white;
-	color:white;
-    border-radius:15px;
- }
+
+    #roomName{
+        margin-top: 15px;
+        background-color: white;
+        color:black;
+    }
+    .room-list-title{
+        margin-top:25px;
+    }
+    .room-list{
+        .room{
+            border:1px solid white;
+            padding:15px;
+            margin-top:15px;
+            width: 100%;
+            display: block;
+        }
+    }
 }
 
 .game-screen{
@@ -29,12 +49,17 @@ body{
         max-height: 400px;
         max-width: 400px;
         margin: 0 auto;
+        display: none;
     }
-    .turn{
+    .message{
         color:white;
         font-size: 28px;
         text-align:center;
         margin-top:25px;
+    }
+    .back{
+        display: none;
+        
     }
     td{
         font-size: 30px;
@@ -58,4 +83,5 @@ body{
         border-top:1px solid white;
         border-bottom:1px solid white;
     }
+
 }
