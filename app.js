@@ -11,9 +11,6 @@ io.on('connection', function (socket) {
   let roomId;
   let game;
   refreshRoomsList(io);
-  socket.on('my other event', function (data) {
-
-  });
   socket.on('create room', room => {
 
     roomId = shortid.generate();
@@ -33,7 +30,6 @@ io.on('connection', function (socket) {
       refreshRoomsList(io);
 
       io.sockets.in(roomId).emit('player join')
-      socket['abc'] = "abc"
       rooms[index].game = new Game(io,roomId)
 
     } else {
@@ -43,10 +39,7 @@ io.on('connection', function (socket) {
   socket.on('check', (data) => {
 
     let index = findRoom(roomId)
-    console.log(data)
     rooms[index].game.check(data.type,data.row,data.col);
-    //rooms[index].game.showPlayers();
-    //game.showPlayers();
   })
   socket.on('disconnect', function () {
 
@@ -54,6 +47,7 @@ io.on('connection', function (socket) {
     if (index > -1 && rooms[index].players == 2) {
       rooms[index].players--;
       io.sockets.in(roomId).emit('player left')
+
     } else {
       rooms = rooms.filter(room => {
         return room.id !== roomId

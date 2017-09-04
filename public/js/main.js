@@ -1,13 +1,11 @@
 const Game = function () {
     let roomId;
-    var socket = io('http://localhost');
+    var socket = io();
     let type;
     $('.board').hide();
     $('.back').hide();
     $('.message').hide();
     socket.on('rooms', rooms => {
-        console.log(rooms)
-        console.log('veio rooms')
         $('.room-list').html('')
         rooms.forEach(room => {
             $('.room-list').append('<li class="room waves-effect" data-room-id="' + room.id + '">' + room.name + '</li>')
@@ -18,7 +16,6 @@ const Game = function () {
     socket.on('room id', data => {
         roomId = data;
         $('#roomId').text(roomId)
-        console.log(roomId)
         $('.buttons-screen').remove();
         $('.back').show();
         $('.message').show();
@@ -26,38 +23,57 @@ const Game = function () {
     })
 
     socket.on('player join', () => {
-        console.log('player join')
         $('.buttons-screen').remove();
         $('.message').show();
-        
+        $('.back').show();
         $('.board').show();
         $('.message').html('Player joined')
     })
     socket.on('player left', () => {
-        $('.message').html('Waiting opponent connect')
+        $('.message').html('Opponent disconnected\nWaiting opponent connect')
+        resetBoard();
+        $('.board').hide();
     })
 
     socket.on('game start', () => {
-        //console.log('meu tipo'+socket['abc'])
         //$('.message').html('Waiting opponent connect')
     })
-    socket.on('my type', (myType) => {
+    socket.on('my type', myType => {
         type = myType;
 
-        console.log('meu tipo ' + type)
     })
-    socket.on('renderBoard', (board) => {
+    socket.on('renderBoard', board => {
         renderBoard(board);
 
+    })
+    socket.on('turn', turn => {
+        let message;
+        if (turn == type) {
+            message = 'Your turn'
+        } else {
+            message = 'Opponent turn'
+        }
+        $('.message').html(message)
+    })
+    socket.on('gameIsOver', win => {
+       
+        if (win.type == 0) {
+            $('.message').html('Draw\nGame restarting in 3 sec')
+        } else {
+            if (win.type == type) {
+                $('.message').html('You win\nGame restarting in 3 sec')
+            } else {
+                $('.message').html('You lose\nGame restarting in 3 sec')
+            }
+        }
+        resetBoard();
     })
     $('#create').click(function () {
         socket.emit('create room', { name: $('#roomName').val() });
 
     })
     $('body').on('click', '.room', function () {
-        console.log('clicou')
 
-        console.log($(this).attr('data-room-id'))
         socket.emit('join room', { id: $(this).attr('data-room-id') })
 
     })
@@ -73,9 +89,19 @@ const Game = function () {
                 if (board[i][j] == 0) {
 
                 } else {
-                    board[i][j] == 1 ?  board[i][j] = 'O' : board[i][j] = 'X'
+                    board[i][j] == 1 ? board[i][j] = 'O' : board[i][j] = 'X'
                     $('td[data-row=' + i + '][data-col=' + j + ']').append('<div class="check">' + board[i][j] + '</div>')
                 }
+            }
+        }
+    }
+    function resetBoard() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+
+
+                $('td[data-row=' + i + '][data-col=' + j + ']').html('')
+
             }
         }
     }
