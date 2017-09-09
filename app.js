@@ -4,6 +4,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const shortid = require('shortid');
 const Game = require('./Game')
+const port = process.env.PORT || 3000;
 app.use(express.static('public'));
 
 let rooms = []
@@ -67,4 +68,4 @@ function findRoom(roomId){
   })
 
 }
-server.listen(80);
+server.listen(port);
